@@ -63,11 +63,9 @@ class Obj {
      * @returns {void}
      */
     drawRect(color: string, stroke: Stroke = { style: color, width: 0 }): void {
-        this.color = color;
-        this.stroke = stroke || { style: color, width: 0 };
-        this.typeOverlay = TypeOverlay.Color;
-        this.typeShape = TypeShape.Square;
-        this.useStroke = !!this.stroke.width;
+        this.setColor(color);
+        this.setTypeShape(TypeShape.Square);
+        this.setStroke(stroke);
         this.draw();
     }
 
@@ -75,11 +73,9 @@ class Obj {
         color: string,
         stroke: Stroke = { style: color, width: 0 }
     ): void {
-        this.color = color;
-        this.stroke = stroke || { style: color, width: 0 };
-        this.typeOverlay = TypeOverlay.Color;
-        this.typeShape = TypeShape.Circle;
-        this.useStroke = !!this.stroke.width;
+        this.setColor(color);
+        this.setTypeShape(TypeShape.Circle);
+        this.setStroke(stroke);
         this.draw();
     }
 
@@ -89,8 +85,7 @@ class Obj {
      * @param {string} src - The source string of the image to be drawn.
      */
     drawImageFromString(src: string) {
-        this.image.src = src;
-        this.typeOverlay = TypeOverlay.Image;
+        this.setImageFromSrc(src);
         this.draw();
     }
     /**
@@ -99,8 +94,7 @@ class Obj {
      * @param {HTMLImageElement} image - The image to draw.
      */
     drawImageFromElement(image: HTMLImageElement) {
-        this.image = image;
-        this.typeOverlay = TypeOverlay.Image;
+        this.setImageFromElement(image);
         this.draw();
     }
 
@@ -187,9 +181,11 @@ class Obj {
 
     /**
      * Sets the color of the object.
+     * @warning this method sould not use with setImageFromSrc or setImageFromElement
      * @param {string} color - The color of the object.
      */
     setColor(color: string): void {
+        this.typeOverlay = TypeOverlay.Color;
         this.color = color;
     }
 
@@ -202,11 +198,48 @@ class Obj {
     }
 
     /**
+     * Sets the stroke
+     * @param stroke - The Stroke object
+     */
+    setStroke(stroke: Stroke): void {
+        this.stroke = stroke;
+        this.useStroke = !!this.stroke.width;
+    }
+
+    /**
+     * Gets the stroke of object
+     * @returns {Stroke} - the stroke
+     */
+    getStroke(): Stroke {
+        return this.stroke;
+    }
+
+    setTypeShape(shape: TypeShape) {
+        this.typeShape = shape;
+    }
+
+    getTypeShape(): TypeShape | undefined {
+        return this.typeShape;
+    }
+
+    /**
      * Sets the image source of the object.
+     * @warning this method sould not use with setColor
      * @param {string} src - The source of the image.
      */
-    setImage(src: string): void {
+    setImageFromSrc(src: string): void {
         this.image.src = src;
+        this.typeOverlay = TypeOverlay.Image;
+    }
+
+    /**
+     * Sets the image from Element
+     * @warning this method sould not use with setColor
+     * @param {HTMLImageElement} image - The image object
+     */
+    setImageFromElement(image: HTMLImageElement): void {
+        this.image = image;
+        this.typeOverlay = TypeOverlay.Image;
     }
 
     /**
@@ -380,7 +413,8 @@ class Scenary {
                 x: (canvas.width / 4) * i,
                 y: 0,
             });
-            bg.drawRect(this.#bgColors, { style: "#a9a9a9", width: 2 });
+            bg.setColor(this.#bgColors);
+            bg.setStroke({ style: "#a9a9a9", width: 2 });
             this.background.push(bg);
 
             let dngrArea: Obj = new Obj(
@@ -392,7 +426,7 @@ class Scenary {
                     y: canvas.height - dangerAreaHeight,
                 }
             );
-            dngrArea.drawRect("#ff000050");
+            dngrArea.setColor("#ff000050");
             this.dangerArea.push(dngrArea);
 
             this.dBackground.push(new Obj(context));
@@ -410,13 +444,17 @@ class Scenary {
                     x: (canvas.width / 4) * i,
                     y: canvas.height - dSrc.height,
                 });
-                this.dBackground[i].drawRect(
-                    i % 2 == 0 ? "#408cb0" : "#5f62b1",
-                    {
-                        style: "#a9a9a9",
-                        width: 2,
-                    }
+                // this.dBackground[i].drawRect(
+                //     i % 2 == 0 ? "#408cb0" : "#5f62b1",
+                //     {
+                //         style: "#a9a9a9",
+                //         width: 2,
+                //     }
+                // );
+                this.dBackground[i].setColor(
+                    i % 2 == 0 ? "#408cb0" : "#5f62b1"
                 );
+                this.dBackground[i].setStroke({ style: "#a9a9a9", width: 2 });
             }
 
             this.dBottom.setWidth(canvas.width - 20);
@@ -425,7 +463,7 @@ class Scenary {
                 x: 10,
                 y: canvas.height - (dSrc.height - 20),
             });
-            this.dBottom.drawImageFromElement(dSrc);
+            this.dBottom.setImageFromElement(dSrc);
         };
     }
 
@@ -606,7 +644,6 @@ class Game {
     }
 
     draw() {
-        console.log("draw");
         if (this.state != gameState.PLAYING) {
             return;
         }
@@ -690,6 +727,7 @@ class Game {
             this.state = gameState.PAUSE;
             window.cancelAnimationFrame(this.animationId);
             clearInterval(this.interval);
+            this.clear();
         }
     }
 
