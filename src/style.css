@@ -17,6 +17,14 @@ body {
     min-height: 100vh;
 }
 
+.hide {
+    display: none !important;
+}
+
+.container {
+    position: relative;
+}
+
 .main-content {
     height: 100vh;
     width: fit-content;
@@ -70,4 +78,29 @@ body {
 #start-game-popup .instruction h3 {
     font-size: 1.5rem;
     margin-bottom: 1rem;
+}
+
+
+#score-board {
+    position: absolute;
+    top: 0;
+    left: 0;
+    font-size: 1.6rem;
+    font-weight: bold;
+}
+
+#countdown {
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#countdown h2 {
+    font-size: 3rem;
+    font-weight: 900;
 }

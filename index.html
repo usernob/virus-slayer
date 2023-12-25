@@ -8,25 +8,34 @@
     </head>
     <body>
         <div class="container">
-            <div class="main-content" id="main-content"></div>
-        </div>
-        <template id="template-start-game">
-            <div class="popup" id="start-game-popup">
-                <div class="instruction">
-                    <h3>Instruction Virus Slayer</h3>
-                    <p>1. Input username and click play</p>
-                    <p>2. Destroy Virus with D F J K Key</p>
-                    <p>3. Reach high score</p>
-                    <p>4. Enjoy</p>
+            <div class="main-content" id="main-content">
+                <canvas id="game"></canvas>
+                <div class="popup hide" id="start-game-popup">
+                    <div class="instruction">
+                        <h3>Instruction Virus Slayer</h3>
+                        <p>1. Input username and click play</p>
+                        <p>2. Destroy Virus with D F J K Key</p>
+                        <p>3. Reach high score</p>
+                        <p>4. Enjoy</p>
+                    </div>
+                    <input
+                        type="text"
+                        name="player_name"
+                        id="player_name"
+                        placeholder="Input Username"
+                    /><button id="play-btn" disabled>Play</button>
                 </div>
-                <input
-                    type="text"
-                    name="player_name"
-                    id="player_name"
-                    placeholder="Input Username"
-                /><button id="play-btn" disabled>Play</button>
+                <div id="countdown" class="hide">
+                    <h2></h2>
+                </div>
             </div>
-        </template>
+            <div id="score-board" class="hide">
+                <p>Time: <span id="time"></span></p>
+                <p>Score: <span id="score"></span></p>
+                <p>Fail: <span id="fail"></span></p>
+                <p>Player: <span id="username"></span></p>
+            </div>
+        </div>
         <script type="module" src="/src/main.ts"></script>
     </body>
 </html>
