@@ -47,7 +47,7 @@ class Obj {
         ctx: CanvasRenderingContext2D,
         width: number = 0,
         height: number = 0,
-        pos: Position = { x: 0, y: 0 }
+        pos: Position = { x: 0, y: 0 },
     ) {
         this.ctx = ctx;
         this.width = width;
@@ -71,7 +71,7 @@ class Obj {
 
     drawCircle(
         color: string,
-        stroke: Stroke = { style: color, width: 0 }
+        stroke: Stroke = { style: color, width: 0 },
     ): void {
         this.setColor(color);
         this.setTypeShape(TypeShape.Circle);
@@ -103,14 +103,14 @@ class Obj {
      *
      * @return {void} This function does not return a value.
      */
-    draw() {
+    draw(): void {
         if (this.typeOverlay === TypeOverlay.Image) {
             this.ctx.drawImage(
                 this.image,
                 this.pos.x,
                 this.pos.y,
                 this.width,
-                this.height
+                this.height,
             );
             return;
         }
@@ -122,7 +122,7 @@ class Obj {
                 this.pos.y + this.height / 2,
                 this.width / 2,
                 0,
-                2 * Math.PI
+                2 * Math.PI,
             );
             this.ctx.fillStyle = this.color;
             this.ctx.fill();
@@ -141,7 +141,7 @@ class Obj {
                     this.pos.x,
                     this.pos.y,
                     this.width,
-                    this.height
+                    this.height,
                 );
             }
         }
@@ -282,7 +282,7 @@ class Entity extends Obj {
         ctx: CanvasRenderingContext2D,
         width?: number,
         height?: number,
-        pos?: Position
+        pos?: Position,
     ) {
         super(ctx, width, height, pos);
     }
@@ -307,11 +307,8 @@ class Entity extends Obj {
 
     /**
      * Moves the object by updating its position and calling the draw method.
-     *
-     * @param {type} paramName - description of parameter
-     * @return {type} description of return value
      */
-    move() {
+    move(): void {
         this.pos.x += this.speedX;
         this.pos.y += this.speedY;
         this.draw();
@@ -331,8 +328,6 @@ class Virus extends Entity {
      *
      * @param {CanvasRenderingContext2D} context - The rendering context for the canvas.
      * @param {number} scale - The scale factor for the canvas.
-     * @param {number} [padding=0] - The padding value for the canvas.
-     * @return {void}
      */
     constructor(context: CanvasRenderingContext2D, scale: number) {
         super(context, scale, scale);
@@ -424,7 +419,7 @@ class Scenary {
                 {
                     x: (canvas.width / 4) * i,
                     y: canvas.height - dangerAreaHeight,
-                }
+                },
             );
             dngrArea.setColor("#ff000050");
             this.dangerArea.push(dngrArea);
@@ -452,7 +447,7 @@ class Scenary {
                 //     }
                 // );
                 this.dBackground[i].setColor(
-                    i % 2 == 0 ? "#408cb0" : "#5f62b1"
+                    i % 2 == 0 ? "#408cb0" : "#5f62b1",
                 );
                 this.dBackground[i].setStroke({ style: "#a9a9a9", width: 2 });
             }
@@ -698,7 +693,7 @@ class Game {
 
             if (count == 3 && this.state == gameState.COUNTDOWN) {
                 this.animationId = window.requestAnimationFrame(() =>
-                    this.draw()
+                    this.draw(),
                 );
                 countdownElm.classList.add("hide");
                 this.scoreboard.showScore();

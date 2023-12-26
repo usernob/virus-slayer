@@ -25,11 +25,11 @@ class StartGamePopUp extends PopUp {
         super("start-game-popup");
 
         this.button = this.element?.querySelector(
-            "button"
+            "button",
         ) as HTMLButtonElement | null;
 
         this.input = this.element?.querySelector(
-            "input"
+            "input",
         ) as HTMLInputElement | null;
 
         this.input?.addEventListener("input", () => this.#inputEventListener());
@@ -48,7 +48,7 @@ class StartGamePopUp extends PopUp {
 
     onStartButtonClick(fn: () => void) {
         this.button?.addEventListener("click", () =>
-            this.#buttonEventListener(fn)
+            this.#buttonEventListener(fn),
         );
     }
 }
