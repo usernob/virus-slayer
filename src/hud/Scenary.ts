@@ -79,7 +79,7 @@ export class Scenary {
         };
     }
 
-    draw() {
+    draw(): void {
         for (let i = 0; i < this.background.length; i++) {
             let thisBg: Background = this.background[i];
             if (thisBg.getPulse()) {
@@ -96,7 +96,7 @@ export class Scenary {
         this.dBottom.draw();
     }
 
-    pulseBgColor(bgColor: string, index: number) {
+    pulseBgColor(bgColor: string, index: number): void {
         this.background[index].setPulse(true);
         this.background[index].pulseFrameCount = 0;
         this.background[index].setColor(bgColor);

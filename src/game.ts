@@ -3,9 +3,10 @@ import { Virus } from "./object/Virus";
 import { Scenary } from "./hud/Scenary";
 import { ScoreBoard } from "./hud/ScoreBoard";
 import { gameState } from "./types/gameTypes";
+import { PausegamePopup } from "./popup/PauseGamePopup";
+import { GameOverPopup } from "./popup/GameOverPopup";
 
 export const dangerAreaHeight = 300;
-
 
 class Game {
     parent: HTMLElement;
@@ -18,8 +19,9 @@ class Game {
     virusSpeed: number = 1;
     scoreboard: ScoreBoard;
     interval: number = 0;
-    isPause: boolean = true;
     state: gameState = gameState.STOPED;
+    #pausePopup: PausegamePopup;
+    #gameoverPopup: GameOverPopup;
 
     constructor() {
         // initialize canvas
@@ -32,13 +34,21 @@ class Game {
 
         this.scoreboard = new ScoreBoard();
 
+        this.#pausePopup = new PausegamePopup();
+        this.#gameoverPopup = new GameOverPopup();
+
+        this.#pausePopup.onBtnContinueClick(() => this.resume());
+        this.#pausePopup.onBtnRestartClick(() => this.restart());
+
+        this.#gameoverPopup.onBtnRestart(() => this.restart());
+
         // draw scenary
         this.scenary = new Scenary(this.context, this.canvas);
 
         document.addEventListener("keydown", (ev) => this.eventListener(ev));
     }
 
-    eventListener(ev: KeyboardEvent) {
+    eventListener(ev: KeyboardEvent): void {
         let keys = ["d", "f", "j", "k"];
         if (keys.includes(ev.key) && this.state == gameState.PLAYING) {
             let index: number = keys.indexOf(ev.key);
@@ -55,7 +65,7 @@ class Game {
         }
     }
 
-    killVirusInDangerArea(index: number) {
+    killVirusInDangerArea(index: number): void {
         const arrVirus = this.viruses.filter((items) => {
             return (
                 items.isAlive() &&
@@ -70,7 +80,7 @@ class Game {
         }
     }
 
-    draw() {
+    draw(): void {
         if (this.state != gameState.PLAYING) {
             return;
         }
@@ -105,6 +115,12 @@ class Game {
 
             if (this.scoreboard.getFail() >= 10) {
                 this.stop();
+                this.#gameoverPopup.setScore(
+                    this.scoreboard.getTimeString(),
+                    this.scoreboard.getScoreString(),
+                    this.scoreboard.getUsername(),
+                );
+                this.#gameoverPopup.show();
                 return;
             }
         }
@@ -112,7 +128,7 @@ class Game {
         this.animationId = window.requestAnimationFrame(() => this.draw());
     }
 
-    run() {
+    run(): void {
         let count = 0;
         let countdownElm: HTMLElement = document.getElementById("countdown")!;
 
@@ -149,30 +165,42 @@ class Game {
         }, 1000);
     }
 
-    pause() {
+    pause(): void {
         if (this.state != gameState.PAUSE) {
             this.state = gameState.PAUSE;
             window.cancelAnimationFrame(this.animationId);
             clearInterval(this.interval);
             this.clear();
+            this.#pausePopup.show();
         }
     }
 
-    resume() {
+    resume(): void {
         if (this.state == gameState.PAUSE) {
+            this.#pausePopup.hide();
             this.run();
         }
     }
 
-    stop() {
+    stop(): void {
         window.cancelAnimationFrame(this.animationId);
         removeEventListener("keydown", (ev) => this.eventListener(ev));
         clearInterval(this.interval);
         this.state = gameState.GAMEOVER;
+        this.scoreboard.hide();
         this.clear();
     }
 
-    clear() {
+    restart(): void {
+        this.virusSpeed = 1;
+        this.scoreboard.resetScore();
+        this.frame = 0;
+        this.viruses = [];
+        this.stop();
+        this.run();
+    }
+
+    clear(): void {
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
     }
 }

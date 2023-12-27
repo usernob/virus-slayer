@@ -24,7 +24,7 @@ export class Obj {
         ctx: CanvasRenderingContext2D,
         width: number = 0,
         height: number = 0,
-        pos: Position = { x: 0, y: 0 }
+        pos: Position = { x: 0, y: 0 },
     ) {
         this.ctx = ctx;
         this.width = width;
@@ -48,7 +48,7 @@ export class Obj {
 
     drawCircle(
         color: string,
-        stroke: Stroke = { style: color, width: 0 }
+        stroke: Stroke = { style: color, width: 0 },
     ): void {
         this.setColor(color);
         this.setTypeShape(TypeShape.Circle);
@@ -61,7 +61,7 @@ export class Obj {
      *
      * @param {string} src - The source string of the image to be drawn.
      */
-    drawImageFromString(src: string) {
+    drawImageFromString(src: string): void {
         this.setImageFromSrc(src);
         this.draw();
     }
@@ -70,7 +70,7 @@ export class Obj {
      *
      * @param {HTMLImageElement} image - The image to draw.
      */
-    drawImageFromElement(image: HTMLImageElement) {
+    drawImageFromElement(image: HTMLImageElement): void {
         this.setImageFromElement(image);
         this.draw();
     }
@@ -87,7 +87,7 @@ export class Obj {
                 this.pos.x,
                 this.pos.y,
                 this.width,
-                this.height
+                this.height,
             );
             return;
         }
@@ -99,7 +99,7 @@ export class Obj {
                 this.pos.y + this.height / 2,
                 this.width / 2,
                 0,
-                2 * Math.PI
+                2 * Math.PI,
             );
             this.ctx.fillStyle = this.color;
             this.ctx.fill();
@@ -118,7 +118,7 @@ export class Obj {
                     this.pos.x,
                     this.pos.y,
                     this.width,
-                    this.height
+                    this.height,
                 );
             }
         }
@@ -243,4 +243,3 @@ export class Obj {
         this.pos = pos;
     }
 }
-

@@ -1,6 +1,6 @@
-import { PopUp } from "./PopUp";
+import { Popup } from "./Popup";
 
-export class StartGamePopUp extends PopUp {
+export class StartGamePopup extends Popup {
     button: HTMLButtonElement | null;
     input: HTMLInputElement | null;
 
@@ -18,17 +18,17 @@ export class StartGamePopUp extends PopUp {
         this.input?.addEventListener("input", () => this.#inputEventListener());
     }
 
-    #inputEventListener() {
+    #inputEventListener(): void {
         const length: number = this.input?.value.length || 0;
         this.button?.toggleAttribute("disabled", length <= 0);
     }
 
-    #buttonEventListener() {
+    #buttonEventListener(): void {
         this.hide();
         localStorage.setItem("username", this.input?.value || "usernob");
     }
 
-    onStartButtonClick(fn: () => void) {
+    onStartButtonClick(fn: () => void): void {
         this.button?.addEventListener("click", () => {
             this.#buttonEventListener();
             fn();

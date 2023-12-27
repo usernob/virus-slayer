@@ -30,11 +30,11 @@ export class Virus extends Entity {
         return this.index;
     }
 
-    isAlive() {
+    isAlive(): boolean {
         return this.alive;
     }
 
-    setPadding(padding: number) {
+    setPadding(padding: number): void {
         this.padding = padding;
         this.setWidth(this.scale - padding);
         this.setHeight(this.scale - padding);
@@ -44,7 +44,7 @@ export class Virus extends Entity {
         });
     }
 
-    kill() {
+    kill(): void {
         this.alive = false;
         this.setPadding(0);
         this.drawImageFromString(splash);

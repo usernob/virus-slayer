@@ -1,4 +1,4 @@
-export class PopUp {
+export class Popup {
     element: HTMLElement | null;
 
     constructor(id: string) {

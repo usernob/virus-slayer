@@ -16,7 +16,7 @@ export class Entity extends Obj {
         ctx: CanvasRenderingContext2D,
         width?: number,
         height?: number,
-        pos?: Position
+        pos?: Position,
     ) {
         super(ctx, width, height, pos);
     }
@@ -26,7 +26,7 @@ export class Entity extends Obj {
      *
      * @param {number} x - The new value for speedX.
      */
-    setSpeedX(x: number) {
+    setSpeedX(x: number): void {
         this.speedX = x;
     }
 
@@ -35,7 +35,7 @@ export class Entity extends Obj {
      *
      * @param {number} y - The new value for the speedY property.
      */
-    setSpeedY(y: number) {
+    setSpeedY(y: number): void {
         this.speedY = y;
     }
 
@@ -48,4 +48,3 @@ export class Entity extends Obj {
         this.draw();
     }
 }
-

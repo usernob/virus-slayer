@@ -8,7 +8,7 @@ export class Background extends Obj {
         super(ctx);
     }
 
-    setPulse(state: boolean) {
+    setPulse(state: boolean): void {
         this.#pulse = state;
     }
     getPulse(): boolean {

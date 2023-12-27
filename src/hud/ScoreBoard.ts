@@ -12,29 +12,33 @@ export class ScoreBoard {
         this.#username = localStorage.getItem("username") || "unknown";
     }
 
-    showScore() {
+    showScore(): void {
         if (this.#scoreBoardElm.classList.contains("hide")) {
             this.#scoreBoardElm.classList.remove("hide");
         }
-        this.fillScoreBoard("#time", formatTime(this.#time));
-        this.fillScoreBoard("#score", this.#score.toString());
-        this.fillScoreBoard("#fail", this.#fail.toString());
-        this.fillScoreBoard("#username", this.#username.toString());
+        this.fillScoreBoard("#time", this.getTimeString());
+        this.fillScoreBoard("#score", this.getScoreString());
+        this.fillScoreBoard("#fail", this.getFailString());
+        this.fillScoreBoard("#username", this.getUsername());
     }
 
-    fillScoreBoard(id: string, data: string) {
+    fillScoreBoard(id: string, data: string): void {
         let elm: HTMLElement | null = this.#scoreBoardElm.querySelector(id);
         if (elm) {
             elm.innerHTML = data;
         }
     }
 
-    getTime(): number {
-        return this.#time;
+    getTimeString(): string {
+        return formatTime(this.#time);
     }
 
-    getScore(): number {
-        return this.#score;
+    getScoreString(): string {
+        return this.#score.toString();
+    }
+
+    getFailString(): string {
+        return this.#fail.toString();
     }
 
     getFail(): number {
@@ -45,38 +49,49 @@ export class ScoreBoard {
         return this.#username;
     }
 
-    setTime(time: number) {
+    setTime(time: number): void {
         this.#time = time;
         this.showScore();
     }
 
-    setScore(score: number) {
+    setScore(score: number): void {
         this.#score = score;
         this.showScore();
     }
 
-    setFail(fail: number) {
+    setFail(fail: number): void {
         this.#fail = fail;
         this.showScore();
     }
 
-    setUsername(username: string) {
+    setUsername(username: string): void {
         this.#username = username;
         this.showScore();
     }
 
-    incrementTime(i: number) {
+    incrementTime(i: number): void {
         this.#time += i;
         this.showScore();
     }
 
-    incrementScore(i: number) {
+    incrementScore(i: number): void {
         this.#score += i;
         this.showScore();
     }
 
-    incrementFail(i: number) {
+    incrementFail(i: number): void {
         this.#fail += i;
         this.showScore();
+    }
+
+    resetScore(): void {
+        this.#time = 0;
+        this.#score = 0;
+        this.#fail = 0;
+        this.showScore();
+    }
+
+    hide(): void {
+        this.#scoreBoardElm.classList.add("hide");
     }
 }

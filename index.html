@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
     <head>
         <meta charset="UTF-8" />
@@ -24,6 +24,30 @@
                         id="player_name"
                         placeholder="Input Username"
                     /><button id="play-btn" disabled>Play</button>
+                </div>
+                <div class="popup hide" id="pause-popup">
+                    <h2>Paused</h2>
+                    <div class="btn-group">
+                        <button type="button" id="btn-continue">
+                            Continue
+                        </button>
+                        <button type="button" id="btn-restart">Restart</button>
+                        <button type="button" id="btn-quit">Quit</button>
+                    </div>
+                </div>
+
+                <div class="popup hide" id="gameover-popup">
+                    <h2>Game Over</h2>
+                    <div id="gameover-scoreboard">
+                        <p>Time: <span id="gameover-time"></span></p>
+                        <p>Score: <span id="gameover-score"></span></p>
+                        <p>player: <span id="gameover-player"></span></p>
+                    </div>
+                    <div class="btn-group">
+                        <button type="button" id="btn-gameover-restart">
+                            Restart
+                        </button>
+                    </div>
                 </div>
                 <div id="countdown" class="hide">
                     <h2></h2>
