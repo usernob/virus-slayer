@@ -3,15 +3,7 @@ import Game from "./game";
 import { StartGamePopup } from "./popup/StartGamePopup";
 
 
-class Runner {
-    game: Game | null;
-    startPopUp: StartGamePopup;
+const game = new Game()
+const startPopUp = new StartGamePopup()
 
-    constructor() {
-        this.game = new Game();
-        this.startPopUp = new StartGamePopup();
-        this.startPopUp.onStartButtonClick(() => this.game?.run());
-    }
-}
-
-new Runner();
+startPopUp.onStartButtonClick(() => game.run())

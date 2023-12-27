@@ -33,9 +33,9 @@ export class Obj {
     }
 
     /**
-     * Sets the color and stroke of the overlay and redraws it.
+     * draw a rectangle
      *
-     * @param {string} color - The color to set.
+     * @param {string} color - The color to rectangle.
      * @param {Stroke} [stroke] - The stroke to set. If not provided, a default stroke will be used.
      * @returns {void}
      */
@@ -46,6 +46,13 @@ export class Obj {
         this.draw();
     }
 
+    /**
+     * draw a circle
+     *
+     * @param {string} color - the color of circle
+     * @param {Stroke} [stroke] - The stroke to set. If not provided, a default stroke will be used.
+     * @returns {void}
+     */
     drawCircle(
         color: string,
         stroke: Stroke = { style: color, width: 0 },
@@ -76,7 +83,7 @@ export class Obj {
     }
 
     /**
-     * Draws the overlay based on the type.
+     * this method used for update and redraw it based on currently state of object
      *
      * @return {void} This function does not return a value.
      */
@@ -191,10 +198,18 @@ export class Obj {
         return this.stroke;
     }
 
+    /**
+     * set Type of shape
+     * @param {TypeShape} shape - the type of shape
+     */
     setTypeShape(shape: TypeShape) {
         this.typeShape = shape;
     }
 
+    /**
+     * get type shape
+     * @returns {TypeShape | undefined}
+     */
     getTypeShape(): TypeShape | undefined {
         return this.typeShape;
     }

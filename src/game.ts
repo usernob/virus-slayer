@@ -18,7 +18,7 @@ class Game {
     viruses: Virus[] = [];
     virusSpeed: number = 1;
     scoreboard: ScoreBoard;
-    interval: number = 0;
+    interval: NodeJS.Timeout | undefined;
     state: gameState = gameState.STOPED;
     #pausePopup: PausegamePopup;
     #gameoverPopup: GameOverPopup;
@@ -30,6 +30,7 @@ class Game {
         this.canvas.height = 680;
         this.context = this.canvas.getContext("2d") as CanvasRenderingContext2D;
 
+        // The parent element is the element where the game will be displayed
         this.parent = document.getElementById("main-content") as HTMLElement;
 
         this.scoreboard = new ScoreBoard();
@@ -37,25 +38,45 @@ class Game {
         this.#pausePopup = new PausegamePopup();
         this.#gameoverPopup = new GameOverPopup();
 
+        this.registerEventListener();
+
+        // draw scenary
+        this.scenary = new Scenary(this.context, this.canvas);
+    }
+
+    /**
+     * Registers all event listeners and specifies the callback to be executed when the event occurs
+     *
+     * @returns {void}
+     */
+    registerEventListener(): void {
+        document.addEventListener("keydown", (ev) =>
+            this.keydownEventListener(ev),
+        );
+
         this.#pausePopup.onBtnContinueClick(() => this.resume());
         this.#pausePopup.onBtnRestartClick(() => this.restart());
 
         this.#gameoverPopup.onBtnRestart(() => this.restart());
-
-        // draw scenary
-        this.scenary = new Scenary(this.context, this.canvas);
-
-        document.addEventListener("keydown", (ev) => this.eventListener(ev));
     }
 
-    eventListener(ev: KeyboardEvent): void {
+    /**
+     * This is callback for keydown event listener, used for game control
+     *
+     * @param {KeyboardEvent} ev - The keydown event
+     * @returns {void}
+     */
+    keydownEventListener(ev: KeyboardEvent): void {
         let keys = ["d", "f", "j", "k"];
         if (keys.includes(ev.key) && this.state == gameState.PLAYING) {
             let index: number = keys.indexOf(ev.key);
+            // make background of this segments/index lighter than other segments so is kind of pulsating
             this.scenary.pulseBgColor("#ffffff50", index);
+
             this.killVirusInDangerArea(index);
         }
 
+        // escape is used for pause and resume toggle
         if (ev.key == "Escape") {
             if (this.state == gameState.PAUSE) {
                 this.resume();
@@ -65,7 +86,14 @@ class Game {
         }
     }
 
+    /**
+     * If virus in danger area, kill it
+     *
+     * @param {number} index - The index of the segment
+     * @returns {void}
+     */
     killVirusInDangerArea(index: number): void {
+        // filter virus and create new array of virus, only alive virus and in same index of segment and in danger area will be returned
         const arrVirus = this.viruses.filter((items) => {
             return (
                 items.isAlive() &&
@@ -74,12 +102,19 @@ class Game {
                     this.canvas.height - dangerAreaHeight
             );
         });
+
         if (arrVirus.length > 0) {
+            // only kill the first virus in the segment
             this.scoreboard.incrementScore(1);
             arrVirus[0].kill();
         }
     }
 
+    /**
+     * this method used for update and redraw it
+     *
+     * @return {void} This function does not return a value.
+     */
     draw(): void {
         if (this.state != gameState.PLAYING) {
             return;
@@ -94,6 +129,9 @@ class Game {
         for (let i = 0; i < this.viruses.length; i++) {
             const virus = this.viruses[i];
 
+            // if virus is death, draw an death animation
+            // death animation will be draw for deathFrame number of frame
+            // if afterdeathFrame is equal or greater to death number of frame, virus will be removed
             if (!virus.isAlive()) {
                 virus.afterDeathFrame++;
                 if (virus.afterDeathFrame >= virus.deathFrame) {
@@ -105,6 +143,8 @@ class Game {
 
             virus.setSpeedY(this.virusSpeed);
             virus.move();
+
+            // check if virus is out of screen and increment fail
             if (
                 virus.getPos().y + virus.getHeight() >=
                 this.canvas.height - this.scenary.dBackground[0].getHeight()
@@ -113,6 +153,7 @@ class Game {
                 this.scoreboard.incrementFail(1);
             }
 
+            // check the fail score is greater than or equal 10 stop the game and show gameover popup
             if (this.scoreboard.getFail() >= 10) {
                 this.stop();
                 this.#gameoverPopup.setScore(
@@ -125,13 +166,20 @@ class Game {
             }
         }
 
+        // request animation frame
         this.animationId = window.requestAnimationFrame(() => this.draw());
     }
 
+    /**
+     * methods to start the game for the first time or after it has been stopped
+     *
+     * @return {void} This function does not return a value.
+     */
     run(): void {
         let count = 0;
         let countdownElm: HTMLElement = document.getElementById("countdown")!;
 
+        // before starting the game, show countdown
         this.state = gameState.COUNTDOWN;
 
         this.interval = setInterval(() => {
@@ -153,10 +201,8 @@ class Game {
                 count++;
             }
 
-            if (
-                this.state != gameState.PAUSE &&
-                this.state != gameState.COUNTDOWN
-            ) {
+            // every second spawn virus and increment the time
+            if (this.state == gameState.PLAYING) {
                 const newVirus = new Virus(this.context, this.canvas.width / 4);
                 newVirus.setPadding(20);
                 this.viruses.push(newVirus);
@@ -184,7 +230,7 @@ class Game {
 
     stop(): void {
         window.cancelAnimationFrame(this.animationId);
-        removeEventListener("keydown", (ev) => this.eventListener(ev));
+        removeEventListener("keydown", (ev) => this.keydownEventListener(ev));
         clearInterval(this.interval);
         this.state = gameState.GAMEOVER;
         this.scoreboard.hide();

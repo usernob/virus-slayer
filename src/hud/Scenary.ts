@@ -56,13 +56,6 @@ export class Scenary {
                     x: (canvas.width / 4) * i,
                     y: canvas.height - dSrc.height,
                 });
-                // this.dBackground[i].drawRect(
-                //     i % 2 == 0 ? "#408cb0" : "#5f62b1",
-                //     {
-                //         style: "#a9a9a9",
-                //         width: 2,
-                //     }
-                // );
                 this.dBackground[i].setColor(
                     i % 2 == 0 ? "#408cb0" : "#5f62b1",
                 );

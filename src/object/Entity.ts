@@ -6,6 +6,7 @@ export class Entity extends Obj {
     protected speedX: number = 0;
     /**
      * Create a new Entity.
+     * entity is object that can move
      *
      * @param {CanvasRenderingContext2D} ctx - The rendering context.
      * @param {number} [width] - The width of the canvas.
