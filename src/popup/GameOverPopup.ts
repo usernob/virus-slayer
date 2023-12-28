@@ -5,6 +5,7 @@ export class GameOverPopup extends Popup {
     #score: HTMLElement | null;
     #player: HTMLElement | null;
     #btn_restart: HTMLButtonElement | null;
+    #btn_quit: HTMLButtonElement | null;
 
     constructor() {
         super("gameover-popup");
@@ -21,6 +22,13 @@ export class GameOverPopup extends Popup {
         this.#btn_restart = this.element?.querySelector(
             "button#btn-gameover-restart",
         ) as HTMLButtonElement | null;
+        this.#btn_quit = this.element?.querySelector(
+            "button#btn-gameover-quit",
+        ) as HTMLButtonElement | null;
+
+        this.#btn_quit?.addEventListener("click", () => {
+            location.reload();
+        });
     }
 
     setScore(time: string, score: string, player: string): void {
